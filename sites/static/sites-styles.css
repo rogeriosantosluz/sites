@@ -1,0 +1,16 @@
+
+.example1 {
+  border: 1px solid;
+  padding: 10px;
+  box-shadow: 5px 10px;
+}
+.box {
+    padding: 1.5rem;
+    margin-right: 0;
+    margin-left: 0;
+    border-width: 1cm;
+    border-color: black;
+}
+.blabla{
+  text-align: center;
+}

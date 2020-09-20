@@ -1,0 +1,104 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='sites-styles.css')}}">
+
+<script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.js" integrity="sha512-8sIrWJ3xijgfDZyiv3SLPeUrcwD8k0B6zr3wZ5oSyTrv+X7TOlcCeat9IbyZp3IsK1evjCov4IklJ3RULQmohA==" crossorigin="anonymous"></script>
+
+<script>
+
+  var fingerprintReport = function () {
+    Fingerprint2.get(function(components) {
+      var murmur = Fingerprint2.x64hash128(components.map(function (pair) { return pair.value }).join(), 31)
+      //console.log(murmur)
+      $.get("{{ url_for('fp') }}?fp="+murmur);
+    })
+  }
+
+  if (window.requestIdleCallback) {
+    cancelId = requestIdleCallback(fingerprintReport)
+    cancelFunction = cancelIdleCallback
+  } else {
+    cancelId = setTimeout(fingerprintReport, 500)
+    cancelFunction = clearTimeout
+  }
+
+/*
+$(document).ready(function(){
+$.ajax({ url: "database/update.html",
+        context: document.body,
+        success: function(){
+           alert("done");
+        }});
+});
+*/
+</script>
+
+
+{% endblock %}
+
+
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+      {%if request.url_rule.rule == "/"%}
+        <li class="nav-item active">
+      {% else %}
+        <li class="nav-item"></li>
+      {% endif %}
+          <a class="nav-link" href="{{ url_for('home') }}">Home{%if request.url_rule.rule == "/"%}<span class="sr-only">(current)</span>{% endif %}</a>
+        </li>
+    {% if not g.logged_in %}
+      {%if request.url_rule.rule == "/login/"%}
+        <li class="nav-item active">
+      {% else %}
+        <li class="nav-item"></li>
+      {% endif %}
+            <a class="nav-link" href="{{ url_for('login') }}">Login{%if request.url_rule.rule == "/login/"%}<span class="sr-only">(current)</span>{% endif %}</a>
+          </li>
+    {% endif %}
+    {% if g.logged_in %}
+
+    {%if request.url_rule.rule == "/sites/"%}
+    <li class="nav-item active">
+    {% else %}
+    <li class="nav-item"></li>
+    {% endif %}
+        <a class="nav-link" href="{{ url_for('sites') }}">Sites{%if request.url_rule.rule == "/sites/"%}<span class="sr-only">(current)</span>{% endif %}</a>
+    </li>
+
+
+      {%if request.url_rule.rule == "/dnstwist/"%}
+        <li class="nav-item active">
+      {% else %}
+        <li class="nav-item"></li>
+      {% endif %}
+            <a class="nav-link" href="{{ url_for('dnstwist') }}">DNSTwist{%if request.url_rule.rule == "/dnstwits/"%}<span class="sr-only">(current)</span>{% endif %}</a>
+          </li>
+        <li class="nav-item"></li>
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout{%if request.url_rule.rule == "/logout/"%}<span class="sr-only">(current)</span>{% endif %}</a>
+        </li>
+    {% endif %} 
+      </ul>
+    </div>
+  </nav>
+
+{% endblock %}  
+<div class="container-fluid">
+{% block content %}
+{% endblock %}
+</div>
+
+    </body>
+</html>

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+<div class="box">
+<h3 class="display-5">Sites</h3>
+
+<h2>Login</h2>
+
+<form action="{{ url_for('login') }}" method=POST>
+
+<dl>
+<dt>Username
+    <dd><input type=text name=username>
+
+<dt>Password
+    <dd><input type=password name=password>
+</dl>
+
+<p><input type=submit value=Login>
+
+</form>
+
+{% include "footer.html" %}
+{% endblock %}
