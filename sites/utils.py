@@ -1,9 +1,21 @@
 from . import db
 from . import app
 from .models import Domains, DNSTwist
+import click
 
-def import_domains():
-    for domain in open('/Users/rogerioluz/Documents/Xpi/sites/sites/static/names.txt'):
+from flask import Blueprint
+
+bp = Blueprint('utils', __name__)
+
+@bp.cli.command('import_domains')
+#@click.option('--file_path', type=click.STRING, help='Caminho completo do arquivo de dominios, que deve ter um dominio por linha')
+@click.argument('filename', type=click.Path(exists=True))
+def import_domains(filename):
+    """ Importa os dominios para o sistema de sites \n
+        ***IMPORTANTE*** \n
+        FILENAME deve ser o caminho completo do arquivo de dominios, que deve ter um dominio por linha
+    """
+    for domain in open(filename):
         domain = domain.strip()
         app.logger.info("Importando... {}".format(domain))
         try:
@@ -40,12 +52,15 @@ dnstwist
 
 """
 
-def read_json_files():
+@bp.cli.command('import_dnstwist')
+@click.option('--directory_path', type=click.STRING, help='Caminho completo do diretorio com os arquivos JSON do dnstwist a serem importados')
+def import_dnstwist(directory_path):
+    """ Importa os arquivos JSON gerados pelo DNSTwist """
     app.logger.info("Iniciand0...") 
     import os
     import json
 
-    ROOT_DIR = "/Users/rogerioluz/Documents/XPi/rogerio/dnstwist/files/"
+    ROOT_DIR = directory_path
     files = os.listdir(ROOT_DIR)
     app.logger.info(files)
     json_list = []
@@ -104,7 +119,18 @@ def read_json_files():
 flask shell
 
 from sites import utils
-utils.read_json_files()
+utils.import_dnstwist()
 
 INFO:sites:owa.tecfinance.com.br {'dns_a': ['46.30.215.237'], 'dns_aaaa': ['2a02:2350:5:107:806b:2ea6:9e63:17e8'], 'domain_name': 'owa.tecfinance.pt', 'geoip_country': 'Denmark'}
 """
+
+@bp.cli.command('export_dnstwist')
+def export_dnstwist():
+    """ Exporta a lista de dominios gerados pelo DNSTwist """
+    #app.logger.info("Iniciand0...") 
+    dnstwist = DNSTwist.query.all()
+    for d in dnstwist:
+        print(d.domain_name)
+
+
+app.register_blueprint(bp)
