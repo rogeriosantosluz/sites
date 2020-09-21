@@ -128,8 +128,12 @@ INFO:sites:owa.tecfinance.com.br {'dns_a': ['46.30.215.237'], 'dns_aaaa': ['2a02
 def export_dnstwist():
     """ Exporta a lista de dominios gerados pelo DNSTwist """
     #app.logger.info("Iniciand0...") 
-    dnstwist = DNSTwist.query.all()
-    for d in dnstwist:
+    #dnstwist = DNSTwist.query.all()
+    #Exportamos apenas os dominios dnstwist e nao os dominios legitimos
+    query = db.session.query(DNSTwist)
+    sub_query = db.session.query(Domains.domain_name)
+    query = query.filter(~DNSTwist.domain_name.in_(sub_query))
+    for d in query:
         print(d.domain_name)
 
 
