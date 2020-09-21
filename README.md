@@ -18,6 +18,7 @@ Trata-se de um template para gerenciar sites desenvolvido em Flask.
 * source env/bin/activate (PS> .\env\Scripts\activate.bat)
 * pip3 install -r requirements.txt
 * export set FLASK_APP=sites.webapp (PS> $env:FLASK_APP="sites.webapp")
+* export FLASK_ENV=development (default é production)
 * python3 -m flask run --host=0.0.0.0 (PS> flask run)
 
 * Criar o arquivo .env na raiz com as seguintes informações:

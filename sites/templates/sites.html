@@ -5,5 +5,30 @@ Sites
 {% block content %}
 <div class="box">
 <h3 class="display-5">Sites</h3>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Dominio</th>
+        <th scope="col">Data Importação</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for domain in domains%}
+        {% if domain.domain_name in dnstwist_domains %}
+        <tr class="table-warning">
+            <th scope="row">{{domain.id}}</th>
+            <td><a href="{{ url_for('dnstwist', domain=domain.domain_name) }}">{{domain.domain_name}}</a></td>
+        {% else %}
+        <tr>
+            <th scope="row">{{domain.id}}</th>
+            <td>{{domain.domain_name}}</td>
+        {% endif %}
+            <td>{{domain.created_date}}</td>
+        </tr>
+        {%endfor%} 
+    </tbody>
+</table>
 {% include "footer.html" %}
 {% endblock %}
