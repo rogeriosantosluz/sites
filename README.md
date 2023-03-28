@@ -1,6 +1,6 @@
 # Sites
 
-Trata-se de um template para gerenciar sites desenvolvido em Flask. 
+Template app to manage sites developed in Flask
 
 ## Dependencias
 
